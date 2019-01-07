@@ -1,0 +1,184 @@
+---
+title: "R Notebook"
+output: html_notebook
+Reference : http://file.allitebooks.com/20161230/R%20for%20Data%20Science-%20Import,%20Tidy,%20Transform,%20Visualize,%20and%20Model%20Data.pdf
+
+---
+
+```{r}
+library(ggplot2)
+```
+
+```{r}
+ggplot(data = mpg , mapping = aes(x = displ , y = hwy))+
+  geom_point(mapping = aes(color = class)) +
+  geom_smooth(data = filter(mpg , class == "subcompact") , se=FALSE)
+
+ggplot(
+ data = mpg,
+ mapping = aes(x = displ, y = hwy, color = drv)
+) +
+ geom_point() +
+ geom_smooth(se = FALSE)
+  
+## will below lkked different ?
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+ geom_point() +
+ geom_smooth()
+ggplot() +
+ geom_point(
+ data = mpg,
+ mapping = aes(x = displ, y = hwy)
+ ) +
+ geom_smooth(
+ data = mpg,
+ mapping = aes(x = displ, y = hwy)
+ )
+
+
+```
+```{r}
+ggplot(data = diamonds) + geom_col(mapping = aes(cut))
+## above plot can also be drawn by
+
+ggplot(data = diamonds) + stat_count(mapping = aes(x= cut))
+
+
+ggplot(data = diamonds ) +stat_summary(mapping = aes(x = cut , y = depth) ,
+fun.ymin= min,
+fun.ymax = max,
+fun.y = median
+)
+  
+
+```
+
+There are two types of bar charts: geom_bar() and geom_col(). geom_bar() makes the height of the bar proportional to the number of cases in each group (or if the weight aesthetic is supplied, the sum of the weights). If you want the heights of the bars to represent values in the data, use geom_col() instead. geom_bar() uses stat_count() by default: it counts the number of cases at each x position. geom_col() uses stat_identity(): it leaves the data as is.
+
+```{r}
+
+
+ggplot(data = diamonds) +
+    geom_bar(mapping = aes(x= cut , color = cut))
+ggplot(data = diamonds) +
+    geom_bar(mapping = aes(x= cut , fill = cut))
+
+ggplot(data = diamonds) +
+    geom_bar(mapping = aes(x= cut , fill = clarity))
+  
+
+## make it a bit of transparent
+g<- ggplot(data= diamonds , mapping = aes(x = cut , fill = clarity))
+g1 <- ggplot(data = diamonds ,mapping = aes(x= cut , color = clarity)) +
+geom_bar(fill= NA , position = "identity")
+g+ geom_bar(alpha= 1/5, position = "identity")
+g1
+
+
+##position = "fill" works like stacking, but makes each set of
+## stacked bars the same height. 
+
+P<- ggplot(data =diamonds) +geom_bar(mapping= aes(x= cut , fill= clarity), position = "fill")
+P
+
+set_palette(P,brewer.pal(n=8,name="RdBu"))
+  
+```
+```{r}
+
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x=cut , fill = clarity) , position = "dodge")
+
+```
+
+```{r}
+## specific to the scatter plot there is a setting adds a bit of noice so that each point is identified correctly
+ggplot(data= mpg) + geom_point(mapping= aes(x= displ, y= hwy) , position = "jitter") 
+
+## you can use below for help
+?geom_jitter
+?position
+
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy , colour = class)) +
+ geom_jitter() + geom_smooth(data = filter(mpg , class =="suv"))
+
+ggplot(data = mpg , mapping= aes(x= class , y = hwy)) + geom_boxplot(
+  data = filter(mpg , drv=="4") ,  mapping = aes(color = model))
+
+ggplot(data = mpg , mapping= aes(x= class , y = hwy)) + geom_boxplot()
+
+ggplot(data = mpg , mapping= aes(x= class , y = hwy)) + geom_boxplot() +coord_flip()
+
+
+```
+```{r}
+nz <- map_data("nz")
+ggplot(nz, aes(long, lat, group = group)) +
+ geom_polygon(fill = "white", color = "black")
+ggplot(nz, aes(long, lat, group = group)) +
+ geom_polygon(fill = "white", color = "black") +
+ coord_quickmap()
+```
+```{r}
+
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+ geom_point() +
+ geom_abline() +
+ coord_fixed()
+
+ggplot(data = mpg, mapping = aes(x = hwy)) + geom_bar(mapping = aes(fill= drv ) ,position = "identity")+
+  coord_polar()
+
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+ geom_point() +
+ geom_abline() +
+ coord_fixed()
+
+
+```
+ 
+```{r}
+
+ggplot(data= <DATA?) +
+  <GEOM FUNCTION >(
+    mapping = aes(<MAPPINGS>) ,
+    stat = <STAT>, 
+    position = <POSITION>)
+ + <COODINATE_FUNCTIN> +
+  <FACET_FUNCTIN>
+    
+  )
+
+
+a <- 3
+this_is_reallly_a_log_name <- 3
+this_is_reallly_a_log_name
+
+library(tidyverse)
+ggplot(data = mpg) +
+ geom_point(mapping = aes(x = displ, y = hwy))
+
+(jan1 <- filter(flights , month ==1 , day ==1))
+near(sqrt(2) ^ 2 ,2)
+
+## flights on nov and dec.
+filter(flights , month ==11 | month ==12)
+
+filter(flights, month  %in% c(11,12))
+
+filter(flights , !(arr_delay > 120 | dep_delay > 120))
+
+
+```
+
+ 
+ 
+ 
+ 
+```{r}
+
+##flights departeed or arrived early
+ filter(flights , (arr_delay < 0 | dep_delay < 0))
+
+```
+ 
